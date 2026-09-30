@@ -1,0 +1,24 @@
+{
+  "author": {
+    "name": "Chaotic Domain, LLC",
+    "url": "https://github.com/david-nguyen-chaoticdomain"
+  },
+  "description": "Run user tests and UX research without leaving your agent: draft studies (surveys, usability tests, tree tests, card sorts, five-second tests, preference tests, first-click tests, prototype tests), recruit participants from Your Panel, AI Panel, or GenPop Panel, and analyze findings and individual responses. Use the usersage-draft skill to create studies, usersage-recruit to launch recruitment, and usersage-results to analyze what came back. Every other plugin queries systems; this one queries people.",
+  "homepage": "https://usersage.com",
+  "keywords": [
+    "user sage",
+    "usersage",
+    "user testing",
+    "usability testing",
+    "ux research",
+    "survey",
+    "design-feedback",
+    "product-feedback",
+    "tree test",
+    "card sort"
+  ],
+  "license": "MIT",
+  "name": "user-sage",
+  "repository": "https://github.com/david-nguyen-chaoticdomain/user-sage-grok",
+  "version": "0.1.0"
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="User Sage">
+  <path d="M2 2h28v19L21 30H2V2z" fill="#12141A"/>
+  <path d="M30 21v9h-9l9-9z" fill="#C6FF3D"/>
+  <circle cx="12.2" cy="13.2" r="1.7" fill="#C6FF3D"/>
+  <circle cx="17.8" cy="13.2" r="1.7" fill="#C6FF3D"/>
+</svg>
