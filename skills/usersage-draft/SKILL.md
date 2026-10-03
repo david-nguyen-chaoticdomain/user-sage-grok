@@ -7,17 +7,25 @@ description: "Draft UX research studies in User Sage with create_study. Use when
 
 You draft the study content; `create_study` only persists it. It never generates or improves anything for you.
 
+If the researcher has a question but no method yet, plan first with the `usersage-plan` skill (`plan_study`): it recommends a method and drafts the study as a Study Brief. After they approve a plan, pass its `createStudyInput` to `create_study` (it carries the `brief_id`, so the study links back to its Brief).
+
 ## Tools
 
-- **`create_study`** — creates a real, persisted study. Always a DRAFT, never a live link. One call, with everything worked out beforehand: gather what each step needs from the researcher first and confirm anything they would want a say in. The call is final. Share `previewUrl` so they can review, and `builderUrl` so they can finish or adjust anything in the builder. Survey, tree test, and card sort steps are launch-ready on creation; other step types may come back with `readyToLaunch: false` and a `launchProblem` — relay that as-is and hand over `builderUrl`, never claim it is ready to launch.
-- **`duplicate_study`** — makes a new, separate draft copy of an existing study (same steps, no results, no recruitment). Use it to run a study again or compare a variation. The original is never changed.
-- **`get_study`** — inspect an existing study's exact setup (questions, tasks, steps) before duplicating or modeling a new study on it. Its output is large; prefer `get_study_findings` for results.
+- **`create_study`**: creates a real, persisted study. Always a DRAFT, never a live link. One call, with everything worked out beforehand: gather what each step needs from the researcher first and confirm anything they would want a say in. The call is final. Share `previewUrl` so they can review, and `builderUrl` so they can finish or adjust anything in the builder. Survey, tree test, and card sort steps are launch-ready on creation; other step types may come back with `readyToLaunch: false` and a `launchProblem`: relay that as-is and hand over `builderUrl`, never claim it is ready to launch.
+- **`duplicate_study`**: makes a new, separate draft copy of an existing study (same steps, no results, no recruitment). Use it to run a study again or compare a variation. The original is never changed.
+- **`get_study`**: inspect an existing study's exact setup (questions, tasks, steps) before duplicating or modeling a new study on it. Its output is large; prefer `get_study_findings` for results.
 
 Supported step methods: `survey`, `tree_test`, `card_sort`, `five_second_test`, `preference_test`, `first_click_test`, `click_task_flow_test` (prototype test, from a Figma prototype or uploaded screens). A study can chain up to 7 steps sharing one welcome and one thank-you screen.
 
+A survey made from a plan may have a placeholder for a screen people look at (an image block). Chat cannot attach an image to a survey, so the study is created with the placeholder, `setupNotes` says "Upload the screen people will see", and `builderUrl` is where the researcher adds it. Say so; do not claim the study is complete.
+
+## Plans
+
+The tools in this skill need a Pro workspace (the 7-day Pro trial counts). On a Free workspace a call is not an error: User Sage replies with `upgradeRequired`, a plain explanation, the matching page in the app (`dashboardUrl`) and the billing link (`upgradeUrl`). Relay that plainly: say the feature needs Pro, offer the billing link, and point to the same thing in the app, where it works on Free. Do not call these tools just to find out, and never retry a refused call. A researcher on Free can still plan a study and list their Briefs from chat: see the `usersage-plan` skill.
+
 ## Auth
 
-The server is `https://mcp.usersage.com/mcp`, configured by this plugin with an `Authorization: Bearer ${USERSAGE_API_KEY}` header. The key is the user's own User Sage API key, created in the User Sage dashboard under Workspace settings, Integrations, MCP Connector. MCP access requires a Pro workspace. On an auth error, tell the user to check that `USERSAGE_API_KEY` is set in the shell Grok was started from, and that their workspace is on Pro.
+The server is `https://mcp.usersage.com/mcp`, configured by this plugin with an `Authorization: Bearer ${USERSAGE_API_KEY}` header. The key is the user's own User Sage API key, created in the User Sage dashboard under Workspace settings, Integrations, MCP Connector. Any plan can connect. On an auth error (401), tell the user to check that `USERSAGE_API_KEY` is set in the shell Grok was started from and that the key has not been revoked.
 
 ## Rules
 
@@ -27,3 +35,4 @@ The server is `https://mcp.usersage.com/mcp`, configured by this plugin with an 
 - **Respect the hard limits** (up to 7 steps; survey up to 50 questions; tree test up to 300 nodes and 20 tasks; card sort up to 100 cards; five-second test 5 to 20 exposure seconds; preference test at least 2 variants with images; first-click test up to 20 targets). Violating any of these fails the whole call with no study created, so stay within them rather than relying on a retry.
 - **Anything you cannot settle for certain is left for the researcher**, explained in `setupNotes` with `builderUrl` to finish it there. Stopping early is a normal outcome, not a failure.
 - **Never tell the researcher a study is ready to launch when `readyToLaunch` is false.** Launching is a separate step; see the `usersage-recruit` skill.
+- **If a tool named here is missing,** your client cached an older tool list: reconnect the User Sage MCP server or start a new Grok session.
