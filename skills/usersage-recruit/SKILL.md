@@ -9,14 +9,18 @@ Three paths, three different costs. Call them by these names: Your Panel, AI Pan
 
 ## Tools
 
-- **`get_recruitment_options`** — call this BEFORE proposing any recruitment path. It reports which paths can start on this study right now and why an unavailable one is unavailable; relay that as-is and never call that tool anyway. It also covers the AI credit balance and cost, the available AI panels and per-run persona limits, and the GenPop wallet balance plus its exact cost formula, so you can work out affordable sample sizes yourself rather than guessing.
-- **`start_your_panel_recruitment`** — real, shareable link recruiting from the org's own audience. Free. `open` mode: anyone with the link can respond. `closed` mode: only the emails in `inviteEmails`, and this only builds an allowlist, it does NOT send anyone an email; make sure the researcher knows they still need to share the link themselves. This tool never distributes the link for them.
-- **`run_ai_panel`** — synthetic personas take the study; results come back in minutes. Costs AI credits (charged once when the run starts). Asynchronous: hand the researcher `resultsUrl` to watch it live, then check `get_study_findings` later. A study runs through AI Panel once; never suggest re-running the same study. A repeat needs a copy via `duplicate_study`.
-- **`launch_genpop_recruitment`** — real, screened human participants. Spends real GenPop wallet funds the moment it succeeds, and calling it again does not undo that. Work out the cost against the wallet balance and confirm the numbers with the researcher before calling.
+- **`get_recruitment_options`**: call this BEFORE proposing any recruitment path. It reports which paths can start on this study right now and why an unavailable one is unavailable; relay that as-is and never call that tool anyway. It also covers the AI credit balance and cost, the available AI panels and per-run persona limits, and the GenPop wallet balance plus its exact cost formula, so you can work out affordable sample sizes yourself rather than guessing.
+- **`start_your_panel_recruitment`**: real, shareable link recruiting from the org's own audience. Free. `open` mode: anyone with the link can respond. `closed` mode: only the emails in `inviteEmails`, and this only builds an allowlist, it does NOT send anyone an email; make sure the researcher knows they still need to share the link themselves. This tool never distributes the link for them.
+- **`run_ai_panel`**: synthetic personas take the study (a panel of simulated people: `list_panels` shows the ones available, `create_panel` makes a new one; see the `usersage-workspace` skill); results come back in minutes. Costs AI credits (charged once when the run starts). Asynchronous: hand the researcher `resultsUrl` to watch it live, then check `get_study_findings` later. A study runs through AI Panel once; never suggest re-running the same study. A repeat needs a copy via `duplicate_study`.
+- **`launch_genpop_recruitment`**: real, screened human participants. Spends real GenPop wallet funds the moment it succeeds, and calling it again does not undo that. Work out the cost against the wallet balance and confirm the numbers with the researcher before calling.
+
+## Plans
+
+The tools in this skill need a Pro workspace (the 7-day Pro trial counts). On a Free workspace a call is not an error: User Sage replies with `upgradeRequired`, a plain explanation, the matching page in the app (`dashboardUrl`) and the billing link (`upgradeUrl`). Relay that plainly: say the feature needs Pro, offer the billing link, and point to the same thing in the app, where it works on Free. Do not call these tools just to find out, and never retry a refused call. A researcher on Free can still plan a study and list their Briefs from chat: see the `usersage-plan` skill.
 
 ## Auth
 
-The server is `https://mcp.usersage.com/mcp`, configured by this plugin with an `Authorization: Bearer ${USERSAGE_API_KEY}` header. The key is the user's own User Sage API key, created in the User Sage dashboard under Workspace settings, Integrations, MCP Connector. MCP access requires a Pro workspace. On an auth error, tell the user to check that `USERSAGE_API_KEY` is set in the shell Grok was started from, and that their workspace is on Pro.
+The server is `https://mcp.usersage.com/mcp`, configured by this plugin with an `Authorization: Bearer ${USERSAGE_API_KEY}` header. The key is the user's own User Sage API key, created in the User Sage dashboard under Workspace settings, Integrations, MCP Connector. Any plan can connect. On an auth error (401), tell the user to check that `USERSAGE_API_KEY` is set in the shell Grok was started from and that the key has not been revoked.
 
 ## Rules
 
@@ -25,3 +29,4 @@ The server is `https://mcp.usersage.com/mcp`, configured by this plugin with an 
 - **If a balance is too low, say so plainly** and point at the top-up page from the tool response (`buyMoreUrl`) instead of attempting the call anyway.
 - **Never poll a running AI Panel run by re-calling `run_ai_panel`.** Check `get_study_findings`; status stays `running` until `complete` or `failed` (a failed run refunds credits automatically).
 - After any recruitment starts, point the researcher at `resultsUrl` and the `usersage-results` skill for reading what comes back.
+- **If a tool named here is missing,** your client cached an older tool list: reconnect the User Sage MCP server or start a new Grok session.

@@ -1,16 +1,22 @@
 # User Sage plugin for Grok
 
-[User Sage](https://usersage.com) is AI-assisted user testing. This plugin connects Grok to your User Sage workspace through the hosted MCP server, so your agent can draft UX research studies, recruit participants, and read back findings without leaving the terminal.
+[User Sage](https://usersage.com) is AI-assisted user testing. This plugin connects Grok to your User Sage workspace through the hosted MCP server, so your agent can plan UX research studies, draft them, recruit participants, and read back findings without leaving the terminal.
 
 ## What it does
 
-Three skills, one MCP server (`https://mcp.usersage.com/mcp`, 10 tools):
+Five skills, one MCP server (`https://mcp.usersage.com/mcp`, 19 tools):
 
 | Skill | What it does |
 |---|---|
+| `usersage-plan` | Plan a study from a research question: `plan_study` writes a Study Brief (a recommended method, a drafted study, who to ask) and returns a link to open it in User Sage; `list_briefs` finds Briefs made earlier. Works on every plan. |
 | `usersage-draft` | Draft studies with `create_study`: surveys, tree tests, card sorts, five-second tests, preference tests, first-click tests, prototype (click task flow) tests. Variation copies with `duplicate_study`. |
 | `usersage-recruit` | Launch recruitment: Your Panel (own audience, free), AI Panel (synthetic personas, spends AI credits), GenPop Panel (real screened participants, spends wallet funds). |
 | `usersage-results` | Read back findings (`get_study_findings`), individual responses (`get_study_responses`), and study setups. |
+| `usersage-workspace` | Projects (`list_projects`), personas (`list_personas`, `get_persona`, `create_persona`) and AI panels of simulated people (`list_panels`, `get_panel`, `create_panel`). |
+
+## What each plan can do
+
+Any plan can connect. **Free:** plan a study with `plan_study` and list your Briefs with `list_briefs`. Each gives a link to open in User Sage, where you create the study from the Brief for free and do everything else. **Pro (and the 7-day Pro trial):** everything else from your agent: create and duplicate studies, run an AI Panel, start recruiting, read studies and results, and work with Projects, personas and AI panels. Ask for something that needs Pro on a Free workspace and User Sage replies with a plain explanation and a link to billing, never an error, so your agent can tell you and suggest it.
 
 ## Installation
 
@@ -21,7 +27,9 @@ Three skills, one MCP server (`https://mcp.usersage.com/mcp`, 10 tools):
    export USERSAGE_API_KEY="usg_live_..."
    ```
 4. In Grok, open `/marketplace`, find **user-sage**, press `i` to install.
-5. Ask Grok to draft a study, recruit a panel, or summarize findings.
+5. Ask Grok to plan a study, draft one, recruit a panel, or summarize findings.
+
+If a tool this plugin names is missing after an update, your client cached an older tool list: reconnect the User Sage MCP server or start a new Grok session.
 
 If your Grok client does not expand `${USERSAGE_API_KEY}` from the plugin's bundled `.mcp.json`, register the server manually in your own Grok MCP config with the same URL and an `Authorization: Bearer` header carrying your key (the same pattern TinyFish documents for API-key auth).
 
@@ -31,7 +39,7 @@ User Sage's MCP server has no OAuth flow; it authenticates per-user Bearer API k
 
 Requirements worth knowing up front:
 
-- MCP access is **Pro-gated**: free workspaces cannot use the connector. On a 401/403, check the key and the workspace plan.
+- Any plan can connect (see "What each plan can do"). On a 401, check the key.
 - The connector **cannot edit existing studies**. The skills steer the agent to duplicate a study for variations instead.
 
 ## Network endpoints and credentials (for review)
@@ -50,7 +58,7 @@ This repo is the plugin source. To list it in the official catalog:
    ```json
    {
      "name": "user-sage",
-     "description": "AI-assisted user testing: draft UX research studies, recruit Your/AI/GenPop panels, and read back findings.",
+     "description": "AI-assisted user testing: plan and draft UX research studies, recruit Your/AI/GenPop panels, and read back findings.",
      "category": "research",
      "source": {
        "source": "url",
