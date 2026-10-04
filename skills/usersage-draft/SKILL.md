@@ -17,7 +17,7 @@ If the researcher has a question but no method yet, plan first with the `usersag
 
 Supported step methods: `survey`, `tree_test`, `card_sort`, `five_second_test`, `preference_test`, `first_click_test`, `click_task_flow_test` (prototype test, from a Figma prototype or uploaded screens). A study can chain up to 7 steps sharing one welcome and one thank-you screen.
 
-A survey made from a plan may have a placeholder for a screen people look at (an image block). Chat cannot attach an image to a survey, so the study is created with the placeholder, `setupNotes` says "Upload the screen people will see", and `builderUrl` is where the researcher adds it. Say so; do not claim the study is complete.
+A survey made from a plan may have a placeholder for a screen people look at (an image block). If the user gave you the screen, pass it on the survey step as `imageUrl` (a public link) or `imageBase64` (never both, up to 12MB): it fills the placeholder instead of adding a second image. Never invent an image or a link. If you do not have it, or the attach fails, the study is still created, `setupNotes` says "Upload the screen people will see", and `builderUrl` is where the researcher adds it. Say so; do not claim the study is complete.
 
 ## Plans
 
